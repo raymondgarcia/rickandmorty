@@ -1,7 +1,7 @@
-package cl.mobdev.rm.domain.ports;
+package cl.mobdev.rm.application.ports;
 
 import cl.mobdev.rm.domain.model.Character;
 
-public interface RickAndMortyApiClient {
+public interface ApiClient {
     Character getChararcter(String id);
 }

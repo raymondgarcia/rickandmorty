@@ -2,7 +2,7 @@ package cl.mobdev.rm.infrastructure.adapter.inbound;
 
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
-import cl.mobdev.rm.domain.ports.RickAndMortyApiClient;
+import cl.mobdev.rm.application.ports.ApiClient;
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 import java.util.Optional;
 
 @Service
-public class RickAndMortyApiClientAdapter implements RickAndMortyApiClient {
+public class RickAndMortyApiClientAdapter implements ApiClient {
 
     @Autowired
     RestClient restClient;
