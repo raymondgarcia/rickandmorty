@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import cl.mobdev.rm.application.dto.CharacterResponse;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/v1/characters")
 public class CharacterController {
@@ -31,9 +33,9 @@ public class CharacterController {
                 character.type(), character.episodeCount(), origin);
     }
 
-    private static OriginResponse getOriginResponse(Character character) {
-        var origin = character.location();
-        return new OriginResponse(origin.name(), origin.url(), origin.dimension(), origin.residents());
+    private static Optional<OriginResponse> getOriginResponse(Character character) {
+        return character.location()
+                .map( origin -> new OriginResponse(origin.name(), origin.url(), origin.dimension(), origin.residents()));
     }
 
 }
