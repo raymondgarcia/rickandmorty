@@ -41,7 +41,7 @@ public class CharacterControllerTest {
     private FindCharacterById service;
 
     @Test
-    @DisplayName("GET /api/v1/character/{id}")
+    @DisplayName("should return a Character by their ID")
     void shouldReturnCharacterById() throws Exception {
         when(service.execute(any(String.class))).thenReturn(createValidCharacter());
 
@@ -64,7 +64,7 @@ public class CharacterControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/character/20000")
+    @DisplayName("should return a Exception and mapped it to 404 when Character not found")
     void shouldThrowException() throws Exception {
         when(service.execute("20000")).thenThrow(new RickAndMortyApiException(HttpStatus.NOT_FOUND, ""));
 
@@ -74,7 +74,7 @@ public class CharacterControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/character/A")
+    @DisplayName("Should return 400 when ID is a character")
     void shouldThrowExceptionWithCharacter() throws Exception {
         when(service.execute("A")).thenReturn(createValidCharacter());
 
@@ -84,7 +84,7 @@ public class CharacterControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/character/-1")
+    @DisplayName("Should return 400 when ID is a negative")
     void shouldThrowExceptionNegative() throws Exception {
         when(service.execute("-1")).thenReturn(createValidCharacter());
 
