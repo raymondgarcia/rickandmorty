@@ -1,6 +1,7 @@
 package cl.mobdev.rm.infrastructure.config;
 
 import cl.mobdev.rm.domain.exception.RickAndMortyApiException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatusCode;
@@ -12,10 +13,13 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class RestClientConfig {
 
+    @Value("${external.rickandmorty.base-url}")
+    private String baseUrl;
+
     @Bean
     RestClient rickAndMortyRestClient() {
         return  RestClient.builder()
-                .baseUrl("https://rickandmortyapi.com/api/")
+                .baseUrl(baseUrl)
                 .defaultStatusHandler(HttpStatusCode::isError,
                         (req, res) -> {
                             String body = StreamUtils.copyToString(res.getBody(), StandardCharsets.UTF_8);
