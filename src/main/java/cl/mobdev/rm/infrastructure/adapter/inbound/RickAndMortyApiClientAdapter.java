@@ -6,12 +6,13 @@ import cl.mobdev.rm.application.ports.ApiClient;
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.Optional;
 
-@Service
+@Component
 public class RickAndMortyApiClientAdapter implements ApiClient {
 
     @Autowired
