@@ -8,6 +8,13 @@ repos:
       - id: check-added-large-files
   - repo: local
     hooks:
+      - id: spotless-check
+        name: Spotless Format Check
+        entry: ./mvnw
+        args: [check]
+        language: system
+        pass_filenames: false
+        files: \.java$
       - id: maven-compile
         name: Maven Compile Check
         entry: ./mvnw
