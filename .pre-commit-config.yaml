@@ -27,3 +27,11 @@ repos:
         language: system
         pass_filenames: false
         files: \.java$
+      - id: maven-compile
+        name: Maven Test Check
+        entry: ./mvnw
+        args: [ test ]
+        language: system
+        pass_filenames: false
+        always_run: true
+        files: \.java$
