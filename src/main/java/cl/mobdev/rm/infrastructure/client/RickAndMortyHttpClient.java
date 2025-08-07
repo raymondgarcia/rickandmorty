@@ -1,6 +1,7 @@
 package cl.mobdev.rm.infrastructure.client;
 
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
+import cl.mobdev.rm.infrastructure.dto.EpisodeApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,5 +17,9 @@ public class RickAndMortyHttpClient {
 
   public LocationApiDto getLocationApiDto(String id) {
     return restClient.get().uri("location/{id}", id).retrieve().body(LocationApiDto.class);
+  }
+
+  public EpisodeApiDto getEpisodeApiDto(String id) {
+    return restClient.get().uri("episode/{id}", id).retrieve().body(EpisodeApiDto.class);
   }
 }
