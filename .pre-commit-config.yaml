@@ -8,6 +8,13 @@ repos:
       - id: check-added-large-files
   - repo: local
     hooks:
+      - id: spotless-apply
+        name: Spotless (Auto fix)
+        entry: ./mvnw
+        args: [apply]
+        language: system
+        pass_filenames: false
+        files: \.java$
       - id: spotless-check
         name: Spotless Format Check
         entry: ./mvnw
