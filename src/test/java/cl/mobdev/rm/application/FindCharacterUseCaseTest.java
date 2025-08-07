@@ -1,13 +1,11 @@
 package cl.mobdev.rm.application;
 
 import cl.mobdev.rm.application.dto.CharacterResponse;
-import cl.mobdev.rm.application.ports.ApiClient;
-import cl.mobdev.rm.application.ports.FindCharacterById;
-import cl.mobdev.rm.application.service.FindCharacterByIdImpl;
+import cl.mobdev.rm.domain.ports.CharacterRepository;
+import cl.mobdev.rm.application.service.FindCharacterService;
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,13 +20,13 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Find Character Service Test")
-public class FindCharacterByIdTest {
+public class FindCharacterUseCaseTest {
 
     @Mock
-    ApiClient client;
+    CharacterRepository client;
 
     @InjectMocks
-    FindCharacterByIdImpl service;
+    FindCharacterService service;
 
 
     public Character createValidCharacter() {
@@ -76,15 +74,15 @@ public class FindCharacterByIdTest {
     void shouldReturnCharacterByIdNoLocation() {
         when(client.getChararcter("1")).thenReturn(createValidCharacterNoLocation());
 
-        CharacterResponse response = service.execute("1");
+        Character response = service.execute("1");
 
         assertThat(response.id()).isEqualTo(1);
         assertThat(response.name()).isEqualTo("Rick Sanchez");
         assertThat(response.status()).isEqualTo("Alive");
         assertThat(response.species()).isEqualTo("Human");
         assertThat(response.type()).isEqualTo("");
-        assertThat(response.episode_count()).isEqualTo(51);
-        assertThat(response.origin()).isEmpty();
+        assertThat(response.episodeCount()).isEqualTo(51);
+        assertThat(response.location()).isEmpty();
 
     }
 
@@ -93,16 +91,16 @@ public class FindCharacterByIdTest {
     void shouldReturnCharacterById() {
         when(client.getChararcter("1")).thenReturn(createValidCharacter());
 
-        CharacterResponse response = service.execute("1");
+        Character response = service.execute("1");
 
         assertThat(response.id()).isEqualTo(1);
         assertThat(response.name()).isEqualTo("Rick Sanchez");
         assertThat(response.status()).isEqualTo("Alive");
         assertThat(response.species()).isEqualTo("Human");
         assertThat(response.type()).isEqualTo("");
-        assertThat(response.episode_count()).isEqualTo(51);
+        assertThat(response.episodeCount()).isEqualTo(51);
 
-        assertThat(response.origin())
+        assertThat(response.location())
                 .isPresent()
                 .hasValueSatisfying( origin -> {
                     assertThat(origin.name()).isEqualTo("Earth (C-137)");

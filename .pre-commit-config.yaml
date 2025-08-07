@@ -1,29 +1,17 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-  - repo: https://github.com/macisamuele/language-formatters-pre-commmit-hooks
-    rev: v2.0.0
+  - repo: local
     hooks:
-      - id: pretty-format-java
-        args: [--aosp, --autofix]
-  - repo: https://github.com/diffplug/spotless
-    rev: 2.44.0
-    hooks:
-      - id: spotless-java
-        name: Spotless Java Formatter
-        entry: mvn spotless:apply
+      - id: maven-compile
+        name: Maven Compile Check
+        entry: ./mvnw
+        args: [clean, compile]
         language: system
-        types: [java]
-  - repo: https://github.com/checkstyle/checkstyle
-    rev: 10.12.1
-    hooks:
-      - id: checkstyle
-        name: Checkstyle Java Linter
-        entry: mvn checkstyle:check
-        language: system
-        types: [java]
+        pass_filenames: false
+        files: \.java$

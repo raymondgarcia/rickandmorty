@@ -3,17 +3,16 @@ package cl.mobdev.rm.adapter.inboud;
 
 import cl.mobdev.rm.application.dto.CharacterResponse;
 import cl.mobdev.rm.application.dto.OriginResponse;
-import cl.mobdev.rm.application.ports.FindCharacterById;
-import cl.mobdev.rm.domain.exception.RickAndMortyApiException;
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
+import cl.mobdev.rm.domain.ports.FindCharacterUseCase;
+import cl.mobdev.rm.domain.exception.RickAndMortyApiException;
 import cl.mobdev.rm.infrastructure.adapter.inbound.CharacterController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -38,7 +37,7 @@ public class CharacterControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private FindCharacterById service;
+    private FindCharacterUseCase service;
 
     @Test
     @DisplayName("should return a Character by their ID")
@@ -94,8 +93,8 @@ public class CharacterControllerTest {
     }
 
 
-    public CharacterResponse createValidCharacter() {
-        Optional<OriginResponse> origin = Optional.of(new OriginResponse("Earth (C-137)",
+    public Character createValidCharacter() {
+        Optional<Location> origin = Optional.of(new Location("Earth (C-137)",
                 "https://rickandmortyapi.com/api/location/1",
                 "Dimension C-137",
                 List.of("https://rickandmortyapi.com/api/character/38",
@@ -125,7 +124,7 @@ public class CharacterControllerTest {
                         "https://rickandmortyapi.com/api/character/343",
                         "https://rickandmortyapi.com/api/character/356",
                         "https://rickandmortyapi.com/api/character/394")));
-        return new CharacterResponse(1, "Rick Sanchez", "Alive", "Human", "", 51, origin);
+        return new Character(1, "Rick Sanchez", "Alive", "Human", "", 51, origin);
     }
 
 }
