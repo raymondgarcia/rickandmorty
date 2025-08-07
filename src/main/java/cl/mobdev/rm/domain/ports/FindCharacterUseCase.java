@@ -4,5 +4,5 @@ import cl.mobdev.rm.domain.model.Character;
 
 @FunctionalInterface
 public interface FindCharacterUseCase {
-    Character execute(String id);
+  Character execute(String id);
 }

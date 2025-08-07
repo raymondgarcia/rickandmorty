@@ -4,5 +4,5 @@ import cl.mobdev.rm.domain.model.Character;
 
 @FunctionalInterface
 public interface CharacterRepository {
-    Character getChararcter(String id);
+  Character getChararcter(String id);
 }

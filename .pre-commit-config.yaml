@@ -10,15 +10,13 @@ repos:
     hooks:
       - id: spotless-apply
         name: Spotless (Auto fix)
-        entry: ./mvnw
-        args: [apply]
+        entry: ./mvnw spotless:apply
         language: system
         pass_filenames: false
         files: \.java$
       - id: spotless-check
         name: Spotless Format Check
-        entry: ./mvnw
-        args: [check]
+        entry: ./mvnw spotless:check
         language: system
         pass_filenames: false
         files: \.java$
