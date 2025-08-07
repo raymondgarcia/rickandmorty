@@ -25,7 +25,7 @@ repos:
       - id: maven-compile
         name: Maven Compile Check
         entry: ./mvnw
-        args: [clean, compile]
+        args: [clean, compile, test-compile]
         language: system
         pass_filenames: false
         files: \.java$
