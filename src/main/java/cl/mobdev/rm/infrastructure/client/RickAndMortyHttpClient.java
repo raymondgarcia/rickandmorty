@@ -11,6 +11,10 @@ import org.springframework.web.client.RestClient;
 public class RickAndMortyHttpClient {
   @Autowired RestClient restClient;
 
+  public RickAndMortyHttpClient(RestClient restClient) {
+    this.restClient = restClient;
+  }
+
   public CharacterApiDto getCharacterApiDto(String id) {
     return restClient.get().uri("character/{id}", id).retrieve().body(CharacterApiDto.class);
   }

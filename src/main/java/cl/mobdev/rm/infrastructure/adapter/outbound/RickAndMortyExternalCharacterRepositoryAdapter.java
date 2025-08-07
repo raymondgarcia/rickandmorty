@@ -1,24 +1,24 @@
 package cl.mobdev.rm.infrastructure.adapter.outbound;
 
 import cl.mobdev.rm.domain.model.Character;
-import cl.mobdev.rm.domain.ports.CharacterRepository;
+import cl.mobdev.rm.domain.ports.ExternalCharacterRepository;
 import cl.mobdev.rm.infrastructure.client.RickAndMortyHttpClient;
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
-import cl.mobdev.rm.infrastructure.mapper.CharacterDomainMapper;
+import cl.mobdev.rm.infrastructure.mapper.CharacterEntityMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RickAndMortyCharacterRepositoryAdapter implements CharacterRepository {
+public class RickAndMortyExternalCharacterRepositoryAdapter implements ExternalCharacterRepository {
 
   private final RickAndMortyHttpClient httpClient;
 
-  public RickAndMortyCharacterRepositoryAdapter(RickAndMortyHttpClient httpClient) {
+  public RickAndMortyExternalCharacterRepositoryAdapter(RickAndMortyHttpClient httpClient) {
     this.httpClient = httpClient;
   }
 
   @Override
-  public Character getChararcter(String id) {
+  public Character findCharacter(String id) {
     CharacterApiDto characterDto = httpClient.getCharacterApiDto(id);
     return characterDto
         .origin()
@@ -29,9 +29,9 @@ public class RickAndMortyCharacterRepositoryAdapter implements CharacterReposito
 
               LocationApiDto locDto = httpClient.getLocationApiDto(locationId);
 
-              return CharacterDomainMapper.toDomain(characterDto, locDto);
+              return CharacterEntityMapper.toDomain(characterDto, locDto);
             })
-        .orElse(CharacterDomainMapper.toDomain(characterDto));
+        .orElse(CharacterEntityMapper.toDomain(characterDto));
   }
 
   private static String exctractLocationID(String url) {

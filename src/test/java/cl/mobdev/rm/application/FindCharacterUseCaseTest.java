@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import cl.mobdev.rm.application.service.FindCharacterService;
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
-import cl.mobdev.rm.domain.ports.CharacterRepository;
+import cl.mobdev.rm.domain.ports.ExternalCharacterRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @DisplayName("Find Character Service Test")
 public class FindCharacterUseCaseTest {
 
-  @Mock CharacterRepository client;
+  @Mock ExternalCharacterRepository client;
 
   @InjectMocks FindCharacterService service;
 
@@ -70,7 +70,7 @@ public class FindCharacterUseCaseTest {
   @Test
   @DisplayName("Should throw a Exception when Id is not a valid Identifier")
   void shouldReturnCharacterByIdNoLocation() {
-    when(client.getChararcter("1")).thenReturn(createValidCharacterNoLocation());
+    when(client.findCharacter("1")).thenReturn(createValidCharacterNoLocation());
 
     Character response = service.execute("1");
 
@@ -86,7 +86,7 @@ public class FindCharacterUseCaseTest {
   @Test
   @DisplayName("Should return a character by its ID")
   void shouldReturnCharacterById() {
-    when(client.getChararcter("1")).thenReturn(createValidCharacter());
+    when(client.findCharacter("1")).thenReturn(createValidCharacter());
 
     Character response = service.execute("1");
 

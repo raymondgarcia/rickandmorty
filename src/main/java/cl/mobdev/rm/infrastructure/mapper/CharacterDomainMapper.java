@@ -2,49 +2,82 @@ package cl.mobdev.rm.infrastructure.mapper;
 
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
-import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
-import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
+import cl.mobdev.rm.infrastructure.entity.CharacterEntity;
+import cl.mobdev.rm.infrastructure.entity.LocationEntity;
 import java.util.List;
 import java.util.Optional;
 
 public final class CharacterDomainMapper {
 
-  private CharacterDomainMapper() {}
+  private CharacterDomainMapper() {} // Utility class
 
-  public static Character toDomain(CharacterApiDto dto) {
-    Integer episodeCount = dto.episode() != null ? dto.episode().size() : 0;
-
-    return new Character(
-        dto.id(),
-        dto.name(),
-        dto.status(),
-        dto.species(),
-        dto.type(),
-        episodeCount,
-        Optional.empty());
-  }
-
-  public static Character toDomain(CharacterApiDto characterDto, LocationApiDto locationDto) {
-    Integer episodeCount = characterDto.episode() != null ? characterDto.episode().size() : 0;
+  public static Character toDomain(CharacterEntity entity) {
+    if (entity == null) {
+      return null;
+    }
 
     Optional<Location> location =
-        characterDto
-            .origin()
-            .map(
-                origin ->
-                    new Location(
-                        locationDto.name(),
-                        origin.url(),
-                        locationDto.dimension(),
-                        locationDto.residents() != null ? locationDto.residents() : List.of()));
+        Optional.ofNullable(entity.getLocation())
+            .map(CharacterDomainMapper::locationEntityToDomain);
 
     return new Character(
-        characterDto.id(),
-        characterDto.name(),
-        characterDto.status(),
-        characterDto.species(),
-        characterDto.type(),
-        episodeCount,
+        entity.getId(),
+        entity.getName(),
+        entity.getStatus(),
+        entity.getSpecies(),
+        entity.getType(),
+        entity.getEpisodeCount(),
         location);
+  }
+
+  public static CharacterEntity toEntity(Character character) {
+    if (character == null) {
+      return null;
+    }
+
+    CharacterEntity entity = new CharacterEntity();
+    entity.setId(character.id());
+    entity.setName(character.name());
+    entity.setStatus(character.status());
+    entity.setSpecies(character.species());
+    entity.setType(character.type());
+    entity.setEpisodeCount(character.episodeCount());
+
+    // Handle location relationship
+    character
+        .location()
+        .ifPresent(
+            location -> {
+              LocationEntity locationEntity = locationDomainToEntity(location);
+              entity.setLocation(locationEntity);
+            });
+
+    return entity;
+  }
+
+  private static Location locationEntityToDomain(LocationEntity locationEntity) {
+    if (locationEntity == null) {
+      return null;
+    }
+
+    return new Location(
+        locationEntity.getName(),
+        locationEntity.getUrl(),
+        locationEntity.getDimension(),
+        locationEntity.getResidents() != null ? locationEntity.getResidents() : List.of());
+  }
+
+  private static LocationEntity locationDomainToEntity(Location location) {
+    if (location == null) {
+      return null;
+    }
+
+    LocationEntity entity = new LocationEntity();
+    entity.setName(location.name());
+    entity.setUrl(location.url());
+    entity.setDimension(location.dimension());
+    entity.setResidents(location.residents());
+
+    return entity;
   }
 }
