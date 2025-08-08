@@ -1,16 +1,16 @@
 package cl.mobdev.rm.application.service;
 
 import cl.mobdev.rm.domain.model.Character;
-import cl.mobdev.rm.domain.ports.LocalCharacterRepository;
+import cl.mobdev.rm.domain.ports.CharacterRepository;
 import cl.mobdev.rm.domain.ports.SaveCharacterUseCase;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SaveCharacterService implements SaveCharacterUseCase {
 
-  private final LocalCharacterRepository repository;
+  private final CharacterRepository repository;
 
-  public SaveCharacterService(LocalCharacterRepository repository) {
+  public SaveCharacterService(CharacterRepository repository) {
     this.repository = repository;
   }
 
