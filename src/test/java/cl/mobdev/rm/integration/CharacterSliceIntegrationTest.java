@@ -113,5 +113,13 @@ class CharacterSliceIntegrationTest {
         default -> throw new IllegalArgumentException("Character not found with ID: " + id);
       };
     }
+
+    @Override
+    public List<Character> getAllCharacters() {
+      return List.of(
+          new Character(
+              1, "Rick Sanchez", "Alive", "Human", "Scientist", 51, Optional.of(earthC137)),
+          new Character(2, "Morty Smith", "Alive", "Human", "", 51, Optional.empty()));
+    }
   }
 }

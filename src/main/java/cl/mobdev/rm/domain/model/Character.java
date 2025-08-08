@@ -9,4 +9,9 @@ public record Character(
     String species,
     String type,
     Integer episodeCount,
-    Optional<Location> location) {}
+    Optional<Location> location) {
+
+  public Character withType(String type) {
+    return new Character(id, name, status, species, type, episodeCount, location);
+  }
+}

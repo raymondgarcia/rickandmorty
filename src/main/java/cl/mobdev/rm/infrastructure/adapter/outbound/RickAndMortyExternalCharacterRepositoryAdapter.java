@@ -6,6 +6,7 @@ import cl.mobdev.rm.infrastructure.client.RickAndMortyHttpClient;
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
 import cl.mobdev.rm.infrastructure.mapper.CharacterEntityMapper;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +33,11 @@ public class RickAndMortyExternalCharacterRepositoryAdapter implements ExternalC
               return CharacterEntityMapper.toDomain(characterDto, locDto);
             })
         .orElse(CharacterEntityMapper.toDomain(characterDto));
+  }
+
+  @Override
+  public List<Character> getAllCharacters() {
+    return List.of();
   }
 
   private static String exctractLocationID(String url) {
