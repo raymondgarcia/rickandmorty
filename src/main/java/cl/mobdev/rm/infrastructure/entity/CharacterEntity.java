@@ -15,6 +15,8 @@ public class CharacterEntity {
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
   Integer id;
 
+  Integer apiCharacterId;
+
   String name;
 
   String status;

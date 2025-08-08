@@ -21,7 +21,7 @@ public final class CharacterDomainMapper {
             .map(CharacterDomainMapper::locationEntityToDomain);
 
     return new Character(
-        entity.getId(),
+        entity.getApiCharacterId(),
         entity.getName(),
         entity.getStatus(),
         entity.getSpecies(),
@@ -36,7 +36,7 @@ public final class CharacterDomainMapper {
     }
 
     CharacterEntity entity = new CharacterEntity();
-    entity.setId(character.id());
+    entity.setApiCharacterId(character.id());
     entity.setName(character.name());
     entity.setStatus(character.status());
     entity.setSpecies(character.species());
