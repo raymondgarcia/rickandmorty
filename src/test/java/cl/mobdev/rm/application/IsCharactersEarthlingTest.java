@@ -65,7 +65,7 @@ class IsCharactersEarthlingTest {
 
   @Test
   @DisplayName("Should return false if character is not from Earth")
-  public void shouldReturnFalseIfCharacterIsNotFromEarth() {
+  void shouldReturnFalseIfCharacterIsNotFromEarth() {
     Character character = getAlienCharacter();
 
     boolean isEarthling = service.execute(character);
