@@ -1,9 +1,12 @@
 package cl.mobdev.rm.application;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import cl.mobdev.rm.application.service.FindCharacterService;
+import cl.mobdev.rm.domain.exception.RickAndMortyApiException;
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
 import cl.mobdev.rm.domain.ports.ExternalCharacterRepository;
@@ -15,96 +18,121 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatusCode;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Find Character Service Test")
+@DisplayName("Find Character Use Case Tests")
 class FindCharacterUseCaseTest {
 
   @Mock ExternalCharacterRepository client;
 
   @InjectMocks FindCharacterService service;
 
-  Character createValidCharacter() {
-    Optional<Location> location =
-        Optional.of(
-            new Location(
-                "Earth (C-137)",
-                "https://rickandmortyapi.com/api/location/1",
-                "Dimension C-137",
-                List.of(
-                    "https://rickandmortyapi.com/api/character/38",
-                    "https://rickandmortyapi.com/api/character/45",
-                    "https://rickandmortyapi.com/api/character/71",
-                    "https://rickandmortyapi.com/api/character/82",
-                    "https://rickandmortyapi.com/api/character/83",
-                    "https://rickandmortyapi.com/api/character/92",
-                    "https://rickandmortyapi.com/api/character/112",
-                    "https://rickandmortyapi.com/api/character/114",
-                    "https://rickandmortyapi.com/api/character/116",
-                    "https://rickandmortyapi.com/api/character/117",
-                    "https://rickandmortyapi.com/api/character/120",
-                    "https://rickandmortyapi.com/api/character/127",
-                    "https://rickandmortyapi.com/api/character/155",
-                    "https://rickandmortyapi.com/api/character/169",
-                    "https://rickandmortyapi.com/api/character/175",
-                    "https://rickandmortyapi.com/api/character/179",
-                    "https://rickandmortyapi.com/api/character/186",
-                    "https://rickandmortyapi.com/api/character/201",
-                    "https://rickandmortyapi.com/api/character/216",
-                    "https://rickandmortyapi.com/api/character/239",
-                    "https://rickandmortyapi.com/api/character/271",
-                    "https://rickandmortyapi.com/api/character/302",
-                    "https://rickandmortyapi.com/api/character/303",
-                    "https://rickandmortyapi.com/api/character/338",
-                    "https://rickandmortyapi.com/api/character/343",
-                    "https://rickandmortyapi.com/api/character/356",
-                    "https://rickandmortyapi.com/api/character/394")));
-    return new Character(1, "Rick Sanchez", "Alive", "Human", "", 51, location);
+  private Character createValidCharacterWithLocation() {
+    Location location =
+        new Location(
+            "Earth (C-137)",
+            "https://rickandmortyapi.com/api/location/1",
+            "Dimension C-137",
+            List.of(
+                "https://rickandmortyapi.com/api/character/38",
+                "https://rickandmortyapi.com/api/character/45",
+                "https://rickandmortyapi.com/api/character/71",
+                "https://rickandmortyapi.com/api/character/82",
+                "https://rickandmortyapi.com/api/character/83",
+                "https://rickandmortyapi.com/api/character/92",
+                "https://rickandmortyapi.com/api/character/112",
+                "https://rickandmortyapi.com/api/character/114",
+                "https://rickandmortyapi.com/api/character/116",
+                "https://rickandmortyapi.com/api/character/117",
+                "https://rickandmortyapi.com/api/character/120",
+                "https://rickandmortyapi.com/api/character/127",
+                "https://rickandmortyapi.com/api/character/155",
+                "https://rickandmortyapi.com/api/character/169",
+                "https://rickandmortyapi.com/api/character/175",
+                "https://rickandmortyapi.com/api/character/179",
+                "https://rickandmortyapi.com/api/character/186",
+                "https://rickandmortyapi.com/api/character/201",
+                "https://rickandmortyapi.com/api/character/216",
+                "https://rickandmortyapi.com/api/character/239",
+                "https://rickandmortyapi.com/api/character/271",
+                "https://rickandmortyapi.com/api/character/302",
+                "https://rickandmortyapi.com/api/character/303",
+                "https://rickandmortyapi.com/api/character/338",
+                "https://rickandmortyapi.com/api/character/343",
+                "https://rickandmortyapi.com/api/character/356",
+                "https://rickandmortyapi.com/api/character/394"));
+
+    return new Character(1, "Rick Sanchez", "Alive", "Human", "", 51, Optional.of(location));
   }
 
-  public Character createValidCharacterNoLocation() {
-    Optional<Location> location = Optional.empty();
-    return new Character(1, "Rick Sanchez", "Alive", "Human", "", 51, location);
-  }
-
-  @Test
-  @DisplayName("Should throw a Exception when Id is not a valid Identifier")
-  void shouldReturnCharacterByIdNoLocation() {
-    when(client.findCharacter("1")).thenReturn(createValidCharacterNoLocation());
-
-    Character response = service.execute("1");
-
-    assertThat(response.id()).isEqualTo(1);
-    assertThat(response.name()).isEqualTo("Rick Sanchez");
-    assertThat(response.status()).isEqualTo("Alive");
-    assertThat(response.species()).isEqualTo("Human");
-    assertThat(response.type()).isEmpty();
-    assertThat(response.episodeCount()).isEqualTo(51);
-    assertThat(response.location()).isEmpty();
+  private Character createValidCharacterWithoutLocation() {
+    return new Character(1, "Rick Sanchez", "Alive", "Human", "", 51, Optional.empty());
   }
 
   @Test
-  @DisplayName("Should return a character by its ID")
-  void shouldReturnCharacterById() {
-    when(client.findCharacter("1")).thenReturn(createValidCharacter());
+  @DisplayName("Should return character without location when location is not available")
+  void shouldReturnCharacterWithoutLocation() {
+    String characterId = "1";
+    Character expectedCharacter = createValidCharacterWithoutLocation();
+    when(client.findCharacter(characterId)).thenReturn(expectedCharacter);
 
-    Character response = service.execute("1");
+    Character actualCharacter = service.execute(characterId);
 
-    assertThat(response.id()).isEqualTo(1);
-    assertThat(response.name()).isEqualTo("Rick Sanchez");
-    assertThat(response.status()).isEqualTo("Alive");
-    assertThat(response.species()).isEqualTo("Human");
-    assertThat(response.type()).isEmpty();
-    assertThat(response.episodeCount()).isEqualTo(51);
+    assertThat(actualCharacter).isNotNull();
+    assertThat(actualCharacter.id()).isEqualTo(1);
+    assertThat(actualCharacter.name()).isEqualTo("Rick Sanchez");
+    assertThat(actualCharacter.status()).isEqualTo("Alive");
+    assertThat(actualCharacter.species()).isEqualTo("Human");
+    assertThat(actualCharacter.type()).isEmpty();
+    assertThat(actualCharacter.episodeCount()).isEqualTo(51);
+    assertThat(actualCharacter.location()).isEmpty();
 
-    assertThat(response.location())
+    verify(client).findCharacter(characterId);
+  }
+
+  @Test
+  @DisplayName("Should return character with complete location information")
+  void shouldReturnCharacterWithLocation() {
+    String characterId = "1";
+    Character expectedCharacter = createValidCharacterWithLocation();
+    when(client.findCharacter(characterId)).thenReturn(expectedCharacter);
+
+    Character actualCharacter = service.execute(characterId);
+
+    assertThat(actualCharacter).isNotNull();
+    assertThat(actualCharacter.id()).isEqualTo(1);
+    assertThat(actualCharacter.name()).isEqualTo("Rick Sanchez");
+    assertThat(actualCharacter.status()).isEqualTo("Alive");
+    assertThat(actualCharacter.species()).isEqualTo("Human");
+    assertThat(actualCharacter.type()).isEmpty();
+    assertThat(actualCharacter.episodeCount()).isEqualTo(51);
+
+    assertThat(actualCharacter.location())
         .isPresent()
         .hasValueSatisfying(
-            origin -> {
-              assertThat(origin.name()).isEqualTo("Earth (C-137)");
-              assertThat(origin.url()).isEqualTo("https://rickandmortyapi.com/api/location/1");
-              assertThat(origin.dimension()).isEqualTo("Dimension C-137");
-              assertThat(origin.residents()).hasSize(27);
+            location -> {
+              assertThat(location.name()).isEqualTo("Earth (C-137)");
+              assertThat(location.url()).isEqualTo("https://rickandmortyapi.com/api/location/1");
+              assertThat(location.dimension()).isEqualTo("Dimension C-137");
+              assertThat(location.residents()).asList().hasSize(27);
             });
+
+    verify(client).findCharacter(characterId);
+  }
+
+  @Test
+  @DisplayName("Should propagate exception when external repository fails")
+  void shouldPropagateExceptionWhenRepositoryFails() {
+    String characterId = "999";
+    RickAndMortyApiException expectedException =
+        new RickAndMortyApiException(HttpStatusCode.valueOf(404), "Character not found");
+    when(client.findCharacter(characterId)).thenThrow(expectedException);
+
+    assertThatThrownBy(() -> service.execute(characterId))
+        .isInstanceOf(RickAndMortyApiException.class)
+        .hasMessage("Error 404 NOT_FOUND body Character not found");
+
+    verify(client).findCharacter(characterId);
   }
 }
