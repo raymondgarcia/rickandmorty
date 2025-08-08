@@ -24,7 +24,7 @@ class IsHumanCharacterTest {
 
   @Test
   @DisplayName("Should return true if character is human")
-  public void shouldReturnTrueIfCharacterIsHuman() {
+  void shouldReturnTrueIfCharacterIsHuman() {
 
     when(client.findCharacter("1"))
         .thenReturn(new Character(1, "Rick Sanchez", "Alive", "Human", "", 41, Optional.empty()));

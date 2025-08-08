@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest
 @ContextConfiguration(classes = CharacterController.class)
 @DisplayName("Character Controller Test")
-public class CharacterControllerTest {
+class CharacterControllerTest {
 
   @Autowired private MockMvc mockMvc;
 

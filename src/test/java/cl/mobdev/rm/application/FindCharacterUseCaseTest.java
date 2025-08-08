@@ -78,7 +78,7 @@ class FindCharacterUseCaseTest {
     assertThat(response.name()).isEqualTo("Rick Sanchez");
     assertThat(response.status()).isEqualTo("Alive");
     assertThat(response.species()).isEqualTo("Human");
-    assertThat(response.type()).isEqualTo("");
+    assertThat(response.type()).isEmpty();
     assertThat(response.episodeCount()).isEqualTo(51);
     assertThat(response.location()).isEmpty();
   }
@@ -94,7 +94,7 @@ class FindCharacterUseCaseTest {
     assertThat(response.name()).isEqualTo("Rick Sanchez");
     assertThat(response.status()).isEqualTo("Alive");
     assertThat(response.species()).isEqualTo("Human");
-    assertThat(response.type()).isEqualTo("");
+    assertThat(response.type()).isEmpty();
     assertThat(response.episodeCount()).isEqualTo(51);
 
     assertThat(response.location())
@@ -104,7 +104,7 @@ class FindCharacterUseCaseTest {
               assertThat(origin.name()).isEqualTo("Earth (C-137)");
               assertThat(origin.url()).isEqualTo("https://rickandmortyapi.com/api/location/1");
               assertThat(origin.dimension()).isEqualTo("Dimension C-137");
-              assertThat(origin.residents().size()).isEqualTo(27);
+              assertThat(origin.residents()).hasSize(27);
             });
   }
 }

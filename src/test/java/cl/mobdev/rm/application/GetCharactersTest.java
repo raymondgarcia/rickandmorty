@@ -26,7 +26,7 @@ class GetCharactersTest {
 
   @Test
   @DisplayName("Should return all characters")
-  public void shouldReturnAllCharacters() {
+  void shouldReturnAllCharacters() {
 
     // Given
     Location earth =

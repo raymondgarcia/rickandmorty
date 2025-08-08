@@ -20,7 +20,7 @@ class IsCharactersEarthlingTest {
 
   @Test
   @DisplayName("Should return false if character has not location name is")
-  public void shouldReturnFalseIfCharacterHasNotLocationName() {
+  void shouldReturnFalseIfCharacterHasNotLocationName() {
     Character character =
         new Character(
             1,
@@ -45,7 +45,7 @@ class IsCharactersEarthlingTest {
 
   @Test
   @DisplayName("Should return true if character is from Earth")
-  public void shouldReturnTrueIfCharacterIsFromEarth() {
+  void shouldReturnTrueIfCharacterIsFromEarth() {
     Character character = createCharacterFromEarth();
 
     boolean isEarthling = service.execute(character);
@@ -55,7 +55,7 @@ class IsCharactersEarthlingTest {
 
   @Test
   @DisplayName("Should return false if character has no location")
-  public void shouldReturnFalseIfCharacterHasNoLocation() {
+  void shouldReturnFalseIfCharacterHasNoLocation() {
     Character character = getCharacterNoLocation();
 
     boolean isEarthling = service.execute(character);
