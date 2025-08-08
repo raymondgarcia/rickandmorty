@@ -60,17 +60,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class FindCharacterService implements FindCharacterUseCase {
 
-    private final CharacterRepository characterRepository;
+    private final CharacterRepository characterJpaRepository;
 
     // ✅ Constructor injection (no field injection)
-    public FindCharacterService(CharacterRepository characterRepository) {
-        this.characterRepository = characterRepository;
+    public FindCharacterService(CharacterRepository characterJpaRepository) {
+        this.characterJpaRepository = characterJpaRepository;
     }
 
     @Override
     public Character execute(CharacterId id) {
         // ✅ UNA SOLA RESPONSABILIDAD: Orquestación
-        return characterRepository.findById(id);
+        return characterJpaRepository.findById(id);
     }
 }
 ```
@@ -187,7 +187,7 @@ public CharacterResponse execute(String id) {
 ```java
 // ✅ Cada clase tiene una responsabilidad única
 public Character execute(CharacterId id) {
-    return characterRepository.findById(id);  // Solo orquestación
+    return characterJpaRepository.findById(id);  // Solo orquestación
 }
 
 public static CharacterResponse toResponse(Character character) {
