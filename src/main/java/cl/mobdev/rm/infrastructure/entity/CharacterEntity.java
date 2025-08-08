@@ -27,7 +27,7 @@ public class CharacterEntity {
 
   Integer episodeCount;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "location_id")
   LocationEntity location;
 }
