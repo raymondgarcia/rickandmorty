@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  rickandmorty-postgres:
+    image: postgres:15-alpine
+    container_name: rickandmorty-postgres
+    environment:
+      POSTGRES_DB: rickandmorty
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    networks:
+      - rickandmorty-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rickandmorty"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Rick and Morty Application
+  rickandmorty-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rickandmorty-app
+    environment:
+      # Spring profiles
+      SPRING_PROFILES_ACTIVE: docker
+
+      # Database configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://rickandmorty-postgres:5432/rickandmorty
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      # JPA/Hibernate configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+
+      # External API configuration
+      RICKANDMORTY_API_BASE_URL: https://rickandmortyapi.com/api
+
+      # Actuator configuration
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,metrics,prometheus
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
+
+      # Logging
+      LOGGING_LEVEL_CL_MOBDEV_RM: DEBUG
+      LOGGING_LEVEL_ROOT: INFO
+    ports:
+      - "8080:8080"
+    depends_on:
+      rickandmorty-postgres:
+        condition: service_healthy
+    networks:
+      - rickandmorty-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # SonarQube
+  sonarqube:
+    image: sonarqube:10.2-community
+    container_name: rickandmorty-sonarqube
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonarqube-postgres:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    ports:
+      - "9000:9000"
+    depends_on:
+      sonarqube-postgres:
+        condition: service_healthy
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+    networks:
+      - rickandmorty-network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9000/api/system/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # SonarQube PostgreSQL Database
+  sonarqube-postgres:
+    image: postgres:15-alpine
+    container_name: sonarqube-postgres
+    environment:
+      POSTGRES_DB: sonar
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - sonarqube_postgres_data:/var/lib/postgresql/data
+    networks:
+      - rickandmorty-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar -d sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for caching - optional)
+  redis:
+    image: redis:7-alpine
+    container_name: rickandmorty-redis
+    command: redis-server --appendonly yes --requirepass redis123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rickandmorty-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  rickandmorty-network:
+    driver: bridge
+    name: rickandmorty-network
+
+volumes:
+  postgres_data:
+    name: rickandmorty_postgres_data
+  sonarqube_data:
+    name: rickandmorty_sonarqube_data
+  sonarqube_logs:
+    name: rickandmorty_sonarqube_logs
+  sonarqube_extensions:
+    name: rickandmorty_sonarqube_extensions
+  sonarqube_postgres_data:
+    name: rickandmorty_sonarqube_postgres_data
+  redis_data:
+    name: rickandmorty_redis_data

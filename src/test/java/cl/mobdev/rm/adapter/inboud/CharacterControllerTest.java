@@ -5,10 +5,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import cl.mobdev.rm.application.service.CharacterService;
 import cl.mobdev.rm.domain.exception.RickAndMortyApiException;
 import cl.mobdev.rm.domain.model.Character;
 import cl.mobdev.rm.domain.model.Location;
-import cl.mobdev.rm.domain.ports.FindCharacterUseCase;
 import cl.mobdev.rm.infrastructure.adapter.inbound.CharacterController;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +29,12 @@ public class CharacterControllerTest {
 
   @Autowired private MockMvc mockMvc;
 
-  @MockitoBean private FindCharacterUseCase service;
+  @MockitoBean private CharacterService service;
 
   @Test
   @DisplayName("should return a Character by their ID")
   void shouldReturnCharacterById() throws Exception {
-    when(service.execute(any(String.class))).thenReturn(createValidCharacter());
+    when(service.findCharacter(any(String.class))).thenReturn(createValidCharacter());
 
     mockMvc
         .perform(get("/api/v1/character/1"))
@@ -57,7 +57,7 @@ public class CharacterControllerTest {
   @Test
   @DisplayName("should return a Exception and mapped it to 404 when Character not found")
   void shouldThrowException() throws Exception {
-    when(service.execute("20000"))
+    when(service.findCharacter("20000"))
         .thenThrow(new RickAndMortyApiException(HttpStatus.NOT_FOUND, ""));
 
     mockMvc.perform(get("/api/v1/characters/20000")).andExpect(status().isNotFound());
@@ -66,7 +66,7 @@ public class CharacterControllerTest {
   @Test
   @DisplayName("Should return 400 when ID is a character")
   void shouldThrowExceptionWithCharacter() throws Exception {
-    when(service.execute("A")).thenReturn(createValidCharacter());
+    when(service.findCharacter("A")).thenReturn(createValidCharacter());
 
     mockMvc.perform(get("/api/v1/character/A")).andExpect(status().isBadRequest());
   }
@@ -74,7 +74,7 @@ public class CharacterControllerTest {
   @Test
   @DisplayName("Should return 400 when ID is a negative")
   void shouldThrowExceptionNegative() throws Exception {
-    when(service.execute("-1")).thenReturn(createValidCharacter());
+    when(service.findCharacter("-1")).thenReturn(createValidCharacter());
 
     mockMvc.perform(get("/api/v1/character/-1")).andExpect(status().isBadRequest());
   }

@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public class RickAndMortyApiException extends RuntimeException {
-  private HttpStatusCode statusCode;
-  private String body;
+  private final HttpStatusCode statusCode;
+  private final String body;
 
   public RickAndMortyApiException(HttpStatusCode statusCode, String body) {
     super("Error " + statusCode.toString() + " body " + body);

@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Get Characters Service Test")
-public class GetCharactersTest {
+class GetCharactersTest {
 
   @Mock ExternalCharacterRepository client;
 
@@ -50,7 +50,7 @@ public class GetCharactersTest {
 
     assertThat(characters).isNotNull();
     assertThat(characters.size()).isEqualTo(2);
-    assertThat(characters.getFirst().type()).isEqualTo("Human");
-    assertThat(characters.getLast().type()).isEqualTo("2l1h4l1m5nd4");
+    assertThat(characters.getFirst().type()).isEqualTo("2l1h4l1m5nd4");
+    assertThat(characters.getLast().type()).isEqualTo("Human");
   }
 }

@@ -10,6 +10,7 @@ public class IsCharactersEarthlingService implements IsCharactersEarthlingUseCas
   public boolean execute(Character character) {
     return character
         .location()
+        .filter(location -> location.name() != null && !location.name().isEmpty())
         .map(location -> location.dimension().toLowerCase().contains("earth"))
         .orElse(false);
   }

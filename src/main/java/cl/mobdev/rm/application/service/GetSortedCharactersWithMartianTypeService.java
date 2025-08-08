@@ -5,7 +5,6 @@ import cl.mobdev.rm.domain.ports.ExternalCharacterRepository;
 import cl.mobdev.rm.domain.ports.GetSortedCharactersWithMartianTypeUseCase;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GetSortedCharactersWithMartianTypeService
     implements GetSortedCharactersWithMartianTypeUseCase {
@@ -29,6 +28,6 @@ public class GetSortedCharactersWithMartianTypeService
               }
               return character;
             })
-        .collect(Collectors.toList());
+        .toList();
   }
 }

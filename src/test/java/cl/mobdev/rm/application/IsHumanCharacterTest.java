@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Is Human Character Test")
-public class IsHumanCharacterTest {
+class IsHumanCharacterTest {
 
   @Mock ExternalCharacterRepository client;
 

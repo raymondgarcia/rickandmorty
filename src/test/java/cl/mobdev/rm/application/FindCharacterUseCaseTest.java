@@ -18,13 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Find Character Service Test")
-public class FindCharacterUseCaseTest {
+class FindCharacterUseCaseTest {
 
   @Mock ExternalCharacterRepository client;
 
   @InjectMocks FindCharacterService service;
 
-  public Character createValidCharacter() {
+  Character createValidCharacter() {
     Optional<Location> location =
         Optional.of(
             new Location(

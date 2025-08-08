@@ -1,6 +1,9 @@
 package cl.mobdev.rm.application.service;
 
 public class MartianTypeTranslatorService {
+
+  private MartianTypeTranslatorService() {}
+
   public static String translateToMartian(String type) {
     return type.toLowerCase()
         .replace("a", "1")

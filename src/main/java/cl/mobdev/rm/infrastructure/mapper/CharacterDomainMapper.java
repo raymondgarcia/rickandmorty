@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public final class CharacterDomainMapper {
 
-  private CharacterDomainMapper() {} // Utility class
+  private CharacterDomainMapper() {}
 
   public static Character toDomain(CharacterEntity entity) {
     if (entity == null) {

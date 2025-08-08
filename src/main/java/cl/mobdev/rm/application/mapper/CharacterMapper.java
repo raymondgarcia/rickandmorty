@@ -8,6 +8,9 @@ import cl.mobdev.rm.domain.model.Location;
 import java.util.Optional;
 
 public class CharacterMapper {
+
+  private CharacterMapper() {}
+
   public static CharacterResponse mapperToCharacterResponse(
       cl.mobdev.rm.domain.model.Character character) {
     var origin = getOriginResponse(character);

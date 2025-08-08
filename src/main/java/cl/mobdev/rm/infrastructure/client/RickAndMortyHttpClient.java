@@ -3,13 +3,13 @@ package cl.mobdev.rm.infrastructure.client;
 import cl.mobdev.rm.infrastructure.dto.CharacterApiDto;
 import cl.mobdev.rm.infrastructure.dto.EpisodeApiDto;
 import cl.mobdev.rm.infrastructure.dto.LocationApiDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
 public class RickAndMortyHttpClient {
-  @Autowired RestClient restClient;
+
+  private final RestClient restClient;
 
   public RickAndMortyHttpClient(RestClient restClient) {
     this.restClient = restClient;

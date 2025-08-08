@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Find if Character is from Earth Service Test")
-public class IsCharactersEarthlingTest {
+class IsCharactersEarthlingTest {
 
   @InjectMocks IsCharactersEarthlingService service;
 

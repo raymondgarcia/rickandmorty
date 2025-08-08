@@ -6,7 +6,6 @@ import cl.mobdev.rm.application.mapper.CharacterMapper;
 import cl.mobdev.rm.application.service.CharacterService;
 import cl.mobdev.rm.domain.model.Character;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/character")
 public class CharacterController {
 
-  @Autowired CharacterService service;
+  private final CharacterService service;
+
+  public CharacterController(CharacterService service) {
+    this.service = service;
+  }
 
   @GetMapping("/{id}")
   public ResponseEntity<CharacterResponse> getCharacterInformation(
